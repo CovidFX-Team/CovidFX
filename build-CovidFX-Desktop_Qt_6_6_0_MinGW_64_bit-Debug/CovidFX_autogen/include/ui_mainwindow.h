@@ -111,7 +111,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "CovidFX -Login", nullptr));
         groupBox->setTitle(QCoreApplication::translate("MainWindow", "Log In", nullptr));
         label_username->setText(QCoreApplication::translate("MainWindow", "Username :", nullptr));
         label_password->setText(QCoreApplication::translate("MainWindow", "Password :", nullptr));
