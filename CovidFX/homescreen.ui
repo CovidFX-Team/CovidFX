@@ -148,7 +148,7 @@
    <property name="title">
     <string>Country #1</string>
    </property>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="countryDropDownMenu">
     <property name="geometry">
      <rect>
       <x>1</x>
