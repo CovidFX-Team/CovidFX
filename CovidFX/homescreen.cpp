@@ -1,40 +1,91 @@
 #include "homescreen.h"
 #include "ui_homescreen.h"
 #include "country.h"
+#include <iostream>
 
-#include <vector>
+void createDataPoints(QVector<Country> countries, QVector<double> &x, QVector<double> &y, double &xAxisMax, double &yAxisMax);
+void loadCountryData(QVector<Country> &countries);
 
 
-void loadCountries(std::vector<Country> &countries);
-
-
-homescreen::homescreen(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::homescreen)
-{
-    std::vector<Country> countries;
-    loadCountries(countries);
-
+homescreen::homescreen(QWidget *parent) : QDialog(parent), ui(new Ui::homescreen) {
     ui->setupUi(this);
 
-    for (auto& it : countries) {
+    QVector<Country> countries; // stores objects of Country class
+    QVector<double> x; // stores data of GDP per capita
+    QVector<double> y; // stores data of deaths per million
+    double xAxisMax = 100;
+    double yAxisMax = 100;
+
+    loadCountryData(countries);
+    createDataPoints(countries, x, y, xAxisMax, yAxisMax);
+
+    // add country names to drop down menu
+    ui->countryDropDownMenu->addItem("");
+    for (auto it : countries) {
         QString countryNameQString = QString::fromStdString(it.getName());
         ui->countryDropDownMenu->addItem(countryNameQString);
     }
 
-    ui->comboBox_2->addItem("GDP Per Capita");
-    ui->comboBox_2->addItem("Total Cases Per Million");
-    ui->comboBox_2->addItem("Total Deaths Per Million");
-    ui->comboBox_2->addItem("Total Deaths Per Case");
+
+    // ui->comboBox_2->addItem("GDP Per Capita");
+    // ui->comboBox_2->addItem("Total Cases Per Million");
+    // ui->comboBox_2->addItem("Total Deaths Per Million");
+    // ui->comboBox_2->addItem("Total Deaths Per Case");
+
+    ui->dataPlot->addGraph(ui->dataPlot->xAxis, ui->dataPlot->yAxis);
+    ui->dataPlot->graph(0)->setPen(QColor(50, 50, 50, 255));
+    ui->dataPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+    ui->dataPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+    ui->dataPlot->graph(0)->setName("A Country");
+
+    // sets the data for the graph
+    ui->dataPlot->graph(0)->setData(x, y);
+
+    // sets the range for each axis to be appropriate
+    ui->dataPlot->xAxis->setRange(0, xAxisMax * 1.05);
+    ui->dataPlot->yAxis->setRange(0, yAxisMax * 1.05);
+
+    std::cout << "Xaxis max: " << xAxisMax << std::endl;
+    std::cout << "Yaxis max: " << yAxisMax << std::endl;
+
+    // add title layout element
+    ui->dataPlot->plotLayout()->insertRow(0);
+    ui->dataPlot->plotLayout()->addElement(0, 0, new QCPTextElement(ui->dataPlot, "Total confirmed Covid-19 deaths per million vs GDP per capita", QFont("sans", 12, QFont::Bold)));
+
+    // set axis labels
+    ui->dataPlot->xAxis->setLabel("GDP per capita");
+    ui->dataPlot->yAxis->setLabel("Confirmed Covid-19 deaths per million");
 }
 
-homescreen::~homescreen()
-{
+
+homescreen::~homescreen() {
     delete ui;
 }
 
-// populates country vector with
-void loadCountries(std::vector<Country> &countries) {
+
+// creates data points to plot on the graph from country data
+void createDataPoints(QVector<Country> countries, QVector<double> &x, QVector<double> &y, double &xAxisMax, double &yAxisMax) {
+    for (int i = 0; i < countries.size(); i++) {
+        double xValue = static_cast<double>(countries[i].getGDP());
+        double yValue = static_cast<double>(countries[i].getDeaths());
+
+        if (xValue > xAxisMax) {
+            xAxisMax = xValue;
+        }
+        if (yValue > yAxisMax) {
+            yAxisMax = yValue;
+        }
+
+        x.push_back(xValue);
+        y.push_back(yValue);
+        std::cout << xValue << ", " << yValue << std::endl;
+    }
+}
+
+
+// populates QVector with relevant data
+// country name, gdp, total cases per million, total deaths per million
+void loadCountryData(QVector<Country> &countries) {
     Country Albania("Albania",18552,117541,1268);
 	Country Algeria("Algeria",13210,6056,153);
 	Country Angola("Angola",6974,2978,54);

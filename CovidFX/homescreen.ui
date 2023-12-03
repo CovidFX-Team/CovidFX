@@ -182,13 +182,13 @@
     </property>
    </widget>
   </widget>
-  <widget class="QCustomPlot" name="widget" native="true">
+  <widget class="QCustomPlot" name="dataPlot" native="true">
    <property name="geometry">
     <rect>
      <x>229</x>
-     <y>29</y>
-     <width>421</width>
-     <height>261</height>
+     <y>19</y>
+     <width>541</width>
+     <height>391</height>
     </rect>
    </property>
   </widget>
