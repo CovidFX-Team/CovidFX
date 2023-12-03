@@ -13,8 +13,8 @@ homescreen::homescreen(QWidget *parent) : QDialog(parent), ui(new Ui::homescreen
     QVector<Country> countries; // stores objects of Country class
     QVector<double> x; // stores data of GDP per capita
     QVector<double> y; // stores data of deaths per million
-    double xAxisMax = 100;
-    double yAxisMax = 100;
+    double xAxisMax = 0;
+    double yAxisMax = 0;
 
     loadCountryData(countries);
     createDataPoints(countries, x, y, xAxisMax, yAxisMax);
@@ -50,11 +50,11 @@ homescreen::homescreen(QWidget *parent) : QDialog(parent), ui(new Ui::homescreen
 
     // add title layout element
     ui->dataPlot->plotLayout()->insertRow(0);
-    ui->dataPlot->plotLayout()->addElement(0, 0, new QCPTextElement(ui->dataPlot, "Total confirmed Covid-19 deaths per million vs GDP per capita", QFont("sans", 12, QFont::Bold)));
+    ui->dataPlot->plotLayout()->addElement(0, 0, new QCPTextElement(ui->dataPlot, "Total confirmed Covid-19 deaths per million cases vs GDP per capita", QFont("sans", 12, QFont::Bold)));
 
     // set axis labels
     ui->dataPlot->xAxis->setLabel("GDP per capita");
-    ui->dataPlot->yAxis->setLabel("Confirmed Covid-19 deaths per million");
+    ui->dataPlot->yAxis->setLabel("Confirmed Covid-19 deaths per million cases");
 }
 
 
@@ -67,7 +67,7 @@ homescreen::~homescreen() {
 void createDataPoints(QVector<Country> countries, QVector<double> &x, QVector<double> &y, double &xAxisMax, double &yAxisMax) {
     for (int i = 0; i < countries.size(); i++) {
         double xValue = static_cast<double>(countries[i].getGDP());
-        double yValue = static_cast<double>(countries[i].getDeaths());
+        double yValue = static_cast<double>(countries[i].getDeathsPerCase());
 
         if (xValue > xAxisMax) {
             xAxisMax = xValue;
