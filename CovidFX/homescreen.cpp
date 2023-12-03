@@ -26,11 +26,11 @@ homescreen::homescreen(QWidget *parent) : QDialog(parent), ui(new Ui::homescreen
         ui->countryDropDownMenu->addItem(countryNameQString);
     }
 
-
-    // ui->comboBox_2->addItem("GDP Per Capita");
-    // ui->comboBox_2->addItem("Total Cases Per Million");
-    // ui->comboBox_2->addItem("Total Deaths Per Million");
-    // ui->comboBox_2->addItem("Total Deaths Per Case");
+    ui->comboBox_2->addItem("");
+    ui->comboBox_2->addItem("GDP Per Capita");
+    ui->comboBox_2->addItem("Total Cases Per Million");
+    ui->comboBox_2->addItem("Total Deaths Per Million");
+    ui->comboBox_2->addItem("Total Deaths Per Case");
 
     ui->dataPlot->addGraph(ui->dataPlot->xAxis, ui->dataPlot->yAxis);
     ui->dataPlot->graph(0)->setPen(QColor(50, 50, 50, 255));
