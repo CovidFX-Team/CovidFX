@@ -20,17 +20,11 @@ homescreen::homescreen(QWidget *parent) : QDialog(parent), ui(new Ui::homescreen
     createDataPoints(countries, x, y, xAxisMax, yAxisMax);
 
     // add country names to drop down menu
-    ui->countryDropDownMenu->addItem("");
+    ui->countryComboBox->addItem("");
     for (auto it : countries) {
         QString countryNameQString = QString::fromStdString(it.getName());
-        ui->countryDropDownMenu->addItem(countryNameQString);
+        ui->countryComboBox->addItem(countryNameQString);
     }
-
-    ui->comboBox_2->addItem("");
-    ui->comboBox_2->addItem("GDP Per Capita");
-    ui->comboBox_2->addItem("Total Cases Per Million");
-    ui->comboBox_2->addItem("Total Deaths Per Million");
-    ui->comboBox_2->addItem("Total Deaths Per Case");
 
     ui->dataPlot->addGraph(ui->dataPlot->xAxis, ui->dataPlot->yAxis);
     ui->dataPlot->graph(0)->setPen(QColor(50, 50, 50, 255));
@@ -60,6 +54,33 @@ homescreen::homescreen(QWidget *parent) : QDialog(parent), ui(new Ui::homescreen
 
 homescreen::~homescreen() {
     delete ui;
+}
+
+
+void homescreen::on_displayPushButton_clicked() {
+    QVector<Country> countryStats;
+    loadCountryData(countryStats);
+
+    int selectedCountryIndex = ui->countryComboBox->currentIndex()-1;
+    Country selectedCountry = countryStats[selectedCountryIndex];
+
+    QString countryName = QString::fromStdString(selectedCountry.getName());
+    QString countryGDP = QString::number(selectedCountry.getGDP());
+    QString countryDeathsPerMillion = QString::number(selectedCountry.getDeaths());
+    QString countryCasesPerMillion = QString::number(selectedCountry.getCases());
+    QString countryDeathsPerMillionCases = QString::number(selectedCountry.getDeathsPerCase());
+
+    qDebug() << "Country Name: " << countryName;
+    qDebug() << "Country GDP: " << countryGDP;
+    qDebug() << "Country Deaths Per Million: " << countryDeathsPerMillion;
+    qDebug() << "Country Cases Per Million: " << countryCasesPerMillion;
+    qDebug() << "Country Deaths Per Million Cases: " << countryDeathsPerMillionCases;
+
+    ui->statDisplayCountryName->setText(countryName);
+    ui->statDisplayGDP->setText(countryGDP);
+    ui->statDisplayDeathsPerMillion->setText(countryDeathsPerMillion);
+    ui->statDisplayCasesPerMillion->setText(countryCasesPerMillion);
+    ui->statDisplayDeathsPerMillionCases->setText(countryDeathsPerMillionCases);
 }
 
 
@@ -436,3 +457,5 @@ void loadCountryData(QVector<Country> &countries) {
     countries.push_back(Zambia);
     countries.push_back(Zimbabwe);
 }
+
+

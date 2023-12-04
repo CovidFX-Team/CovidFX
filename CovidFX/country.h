@@ -20,7 +20,7 @@ public:
         this->GDP = GDP;
         this->totalCasesPerMillion = totalCasesPerMillion;
         this->totalDeathsPerMillion = totalDeathsPerMillion;
-        this->deathsPerCaseScale = (double)(totalDeathsPerMillion * 1000000/ totalCasesPerMillion);
+        this->deathsPerCaseScale = ( (double)totalDeathsPerMillion ) * 1000000 / totalCasesPerMillion;
     }
 
     string getName() {return countryName;}
