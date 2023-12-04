@@ -1083,9 +1083,12 @@ QCPLayer::~QCPLayer()
   // directly, like in the QCustomPlot destructor. (The regular layer removal procedure for the user is to
   // call QCustomPlot::removeLayer, which moves all layerables off this layer before deleting it.)
   
-  while (!mChildren.isEmpty())
+  while (!mChildren.isEmpty()){
+      try{
     mChildren.last()->setLayer(nullptr); // removes itself from mChildren via removeChild()
-  
+  }
+  catch(QException &e){}
+}
   if (mParentPlot->currentLayer() == this)
     qDebug() << Q_FUNC_INFO << "The parent plot's mCurrentLayer will be a dangling pointer. Should have been set to a valid layer or nullptr beforehand.";
 }
@@ -1384,8 +1387,12 @@ QCPLayerable::~QCPLayerable()
 {
   if (mLayer)
   {
+      try{
     mLayer->removeChild(this);
     mLayer = nullptr;
+      }
+      catch(QException &e){}
+
   }
 }
 
@@ -3050,7 +3057,10 @@ QCPMarginGroup::QCPMarginGroup(QCustomPlot *parentPlot) :
 
 QCPMarginGroup::~QCPMarginGroup()
 {
-  clear();
+    try{
+        clear();
+    }
+    catch(QException &e){}
 }
 
 /*!
@@ -13694,8 +13704,12 @@ QCustomPlot::QCustomPlot(QWidget *parent) :
 
 QCustomPlot::~QCustomPlot()
 {
-  clearPlottables();
-  clearItems();
+    try{
+        clearPlottables();
+        clearItems();
+    }
+    catch(QException &e){}
+
 
   if (mPlotLayout)
   {
@@ -24035,7 +24049,10 @@ QCPBarsGroup::QCPBarsGroup(QCustomPlot *parentPlot) :
 
 QCPBarsGroup::~QCPBarsGroup()
 {
-  clear();
+    try{
+        clear();
+    }
+    catch(QException &e){}
 }
 
 /*!
@@ -24458,7 +24475,10 @@ QCPBars::QCPBars(QCPAxis *keyAxis, QCPAxis *valueAxis) :
 
 QCPBars::~QCPBars()
 {
-  setBarsGroup(nullptr);
+    try{
+        setBarsGroup(nullptr);
+    }
+    catch(QException &e){}
   if (mBarBelow || mBarAbove)
     connectBars(mBarBelow.data(), mBarAbove.data()); // take this bar out of any stacking
 }
@@ -32110,8 +32130,8 @@ double QCPPolarAxisRadial::radiusToCoord(double radius) const
 QCPPolarAxisRadial::SelectablePart QCPPolarAxisRadial::getPartAt(const QPointF &pos) const
 {
   Q_UNUSED(pos) // TODO remove later
-  if (!mVisible)
-    return spNone;
+  //if (!mVisible)
+   // return spNone;
   
   /*
     TODO:
@@ -32658,10 +32678,12 @@ QCPPolarAxisAngular::~QCPPolarAxisAngular()
   
   delete mInsetLayout;
   mInsetLayout = 0;
-  
+  try{
   QList<QCPPolarAxisRadial*> radialAxesList = radialAxes();
   for (int i=0; i<radialAxesList.size(); ++i)
     removeRadialAxis(radialAxesList.at(i));
+  }
+  catch(QException &e){}
 }
 
 QCPPolarAxisAngular::LabelMode QCPPolarAxisAngular::tickLabelMode() const
