@@ -1083,9 +1083,12 @@ QCPLayer::~QCPLayer()
   // directly, like in the QCustomPlot destructor. (The regular layer removal procedure for the user is to
   // call QCustomPlot::removeLayer, which moves all layerables off this layer before deleting it.)
   
-  while (!mChildren.isEmpty())
+  while (!mChildren.isEmpty()){
+      try{
     mChildren.last()->setLayer(nullptr); // removes itself from mChildren via removeChild()
-  
+  }
+  catch(QException &e){}
+}
   if (mParentPlot->currentLayer() == this)
     qDebug() << Q_FUNC_INFO << "The parent plot's mCurrentLayer will be a dangling pointer. Should have been set to a valid layer or nullptr beforehand.";
 }
