@@ -15,6 +15,9 @@ public:
     explicit homescreen(QWidget *parent = nullptr);
     ~homescreen();
 
+private slots:
+    void on_displayPushButton_clicked();
+
 private:
     Ui::homescreen *ui;
 };
